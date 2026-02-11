@@ -87,6 +87,35 @@ public class BookController {
         return "search";
     }
 
+    @PostMapping("/updateBook")
+    public String updateBook(@ModelAttribute Book book, Model model) {
+
+        Book existingBook = bookRepo.findByBookid(book.getBookid());
+
+        if(existingBook != null){
+
+            // update fields
+            existingBook.setTitle(book.getTitle());
+            existingBook.setAuthor(book.getAuthor());
+            existingBook.setPublisher(book.getPublisher());
+            existingBook.setPublicationYear(book.getPublicationYear());
+            existingBook.setPrice(book.getPrice());
+            existingBook.setQuantity(book.getQuantity());
+            existingBook.setLanguage(book.getLanguage());
+
+            bookRepo.save(existingBook);
+
+            model.addAttribute("book", existingBook);
+            model.addAttribute("message", "Book updated successfully!");
+
+        } else {
+            model.addAttribute("error", "Book not found!");
+            model.addAttribute("book", new Book());
+        }
+
+        return "updatebook";
+    }
+
     @PostMapping("/deleteBook")
     public String deleteBook(@ModelAttribute Book book, Model model) {
         String bookid = book.getBookid();
